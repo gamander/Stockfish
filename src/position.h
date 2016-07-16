@@ -98,6 +98,7 @@ public:
 
   // FEN string input/output
   Position& set(const std::string& fenStr, bool isChess960, StateInfo* si, Thread* th);
+  Position& set(const std::string& code, Color c, StateInfo* si);
   const std::string fen() const;
 
   // Position representation
@@ -211,7 +212,7 @@ private:
   bool chess960;
 };
 
-extern std::ostream& operator<<(std::ostream& os, const Position& pos);
+extern std::ostream& operator<<(std::ostream& os, Position& pos);
 
 inline Color Position::side_to_move() const {
   return sideToMove;
