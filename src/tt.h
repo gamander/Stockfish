@@ -44,8 +44,6 @@ struct TTEntry {
 
   void save(Key k, Value v, Bound b, Depth d, Move m, Value ev, uint8_t g) {
 
-    assert(d / ONE_PLY * ONE_PLY == d);
-
     // Preserve any existing move for the same position
     if (m || (k >> 48) != key16)
         move16 = (uint16_t)m;

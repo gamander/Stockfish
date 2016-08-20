@@ -72,7 +72,7 @@ namespace {
   int Reductions[2][2][64][64];  // [pv][improving][depth][moveNumber]
 
   template <bool PvNode> Depth reduction(bool i, Depth d, int mn) {
-    return Reductions[PvNode][i][std::min(d / ONE_PLY, 63)][std::min(mn, 63)] * ONE_PLY;
+    return Depth(Reductions[PvNode][i][std::min(d / ONE_PLY, 63)][std::min(mn, 63)]);
   }
 
   // Skill structure is used to implement strength limit
@@ -186,12 +186,12 @@ void Search::init() {
               if (r < 0.80)
                 continue;
 
-              Reductions[NonPV][imp][d][mc] = int(std::round(r));
-              Reductions[PV][imp][d][mc] = std::max(Reductions[NonPV][imp][d][mc] - 1, 0);
+              Reductions[NonPV][imp][d][mc] = int(std::round(r * int(ONE_PLY)));
+              Reductions[PV][imp][d][mc] = std::max(Reductions[NonPV][imp][d][mc] - ONE_PLY, 0);
 
               // Increase reduction for non-PV nodes when eval is not improving
-              if (!imp && Reductions[NonPV][imp][d][mc] >= 2)
-                Reductions[NonPV][imp][d][mc]++;
+              if (!imp && Reductions[NonPV][imp][d][mc] >= 2 * ONE_PLY)
+                Reductions[NonPV][imp][d][mc] += ONE_PLY;
           }
 
   for (int d = 0; d < 16; ++d)
@@ -553,8 +553,6 @@ namespace {
     assert(PvNode || (alpha == beta - 1));
     assert(DEPTH_ZERO < depth && depth < DEPTH_MAX);
     assert(!(PvNode && cutNode));
-
-    assert(depth / ONE_PLY * ONE_PLY == depth);
 
     Move pv[MAX_PLY+1], quietsSearched[64];
     StateInfo st;
