@@ -182,7 +182,7 @@ void Search::init() {
       for (int d = 1; d < 64; ++d)
           for (int mc = 1; mc < 64; ++mc)
           {
-              double r = log(d) * log(mc) / 1.6;
+              double r = log(d) * log(mc) / 1.7;
               if (r < 0.80)
                 continue;
 
